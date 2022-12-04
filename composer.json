@@ -1,6 +1,6 @@
 {
-  "name": "bbc/gradely",
-  "description": "Gradely der Bbc AG",
+  "name": "noebuerki/webmc",
+  "description": "WebMVC",
   "type": "project",
   "minimum-stability": "dev",
   "require": {},

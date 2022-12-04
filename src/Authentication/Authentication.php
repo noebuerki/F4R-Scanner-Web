@@ -24,13 +24,6 @@ class Authentication
         return false;
     }
 
-    private static function checkUserRepo()
-    {
-        if (Authentication::$UserRepo === null) {
-            Authentication::$UserRepo = new UserRepository();
-        }
-    }
-
     public static function logout()
     {
         session_destroy();
@@ -55,22 +48,34 @@ class Authentication
         }
     }
 
-    public static function isAuthenticated()
-    {
-        return isset($_SESSION['userID']);
+    public static function authenticateApiKey($apiKey) {
+        $user = Authentication::$UserRepo->readByApiKey($apiKey);
+        return $user != null;
     }
 
     public static function restrictAdmin()
     {
         if (!self::isAdmin()) {
-            header('Location: /default/error?errorid=10&target=/');
+            header('Location: /default/error?errorid=3&target=/');
             error_log("No Admin permission!");
             exit();
         }
     }
 
+    public static function isAuthenticated()
+    {
+        return isset($_SESSION['userID']);
+    }
+
     public static function isAdmin()
     {
         return isset($_SESSION['admin']) && self::isAuthenticated();
+    }
+
+    private static function checkUserRepo()
+    {
+        if (Authentication::$UserRepo === null) {
+            Authentication::$UserRepo = new UserRepository();
+        }
     }
 }

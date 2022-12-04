@@ -18,16 +18,16 @@
     <br>
     Simply send an email to the following address an we will get back to you
     <br>
-    <a href="mailto:support@noebuerki-services.ch" data-toggle="tooltip" title="E-Mail schreiben"><i
+    <a href="mailto:support@noebuerki-services.ch" data-toggle="tooltip" title="Write E-Mail"><i
                 class="bi bi-envelope-fill"></i>
         support@noebuerki-services.ch</a>
 </p>
 
 <div class="d-flex flex-row justify-content-center">
     <a class="nav-link my-5 p-0" href="/default/privacy" role="button" data-toggle="tooltip"
-       title="Privacy is key">
+       title="Privacy Statement">
         <div class="btn btn-secondary">
-            <i class="bi bi-card-text"></i> Privacy statement
+            <i class="bi bi-card-text"></i> Privacy Statement
         </div>
     </a>
 </div>

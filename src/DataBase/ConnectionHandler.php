@@ -12,7 +12,7 @@ class ConnectionHandler
 
     private function __construct()
     {
-        // Privater Konstruktor um die Verwendung von getInstance zu erzwingen.
+        // Force use of getInstance()
     }
 
     public static function getConnection()

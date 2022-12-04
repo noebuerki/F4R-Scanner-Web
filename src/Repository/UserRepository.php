@@ -14,9 +14,20 @@ class UserRepository extends Repository
     private $columnUsername = "username";
     private $columnEmail = "email";
     private $columnPassword = "password";
+    private $columnApiKey = "apiKey";
     private $columnAdmin = "admin";
 
-    /* Database-Statements */
+    public function create($username, $email, $password, $apiKey)
+    {
+        $query = "INSERT INTO $this->tablename ($this->columnUsername, $this->columnEmail, $this->columnPassword, $this->columnApiKey) VALUES (?, ?, ?, ?)";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('ssss', $username, $email, password_hash($password, PASSWORD_DEFAULT), $apiKey);
+        if (!$statement->execute()) {
+            throw new Exception($statement->error);
+        }
+    }
+
     public function readByID($id)
     {
         $query = "SELECT * FROM $this->tablename WHERE $this->columnId = ?";
@@ -26,6 +37,62 @@ class UserRepository extends Repository
         $statement->execute();
 
         return $this->processSingleResult($statement->get_result());
+    }
+    
+    public function readByUsername($username)
+    {
+        $query = "SELECT * FROM $this->tablename WHERE $this->columnUsername = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('s', $username);
+        $statement->execute();
+
+        return $this->processSingleResult($statement->get_result());
+    }
+
+    public function readByApiKey($apiKey)
+    {
+        $query = "SELECT * FROM $this->tablename WHERE $this->columnApiKey = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('s', $apiKey);
+        $statement->execute();
+
+        return $this->processSingleResult($statement->get_result());
+    }
+
+    public function updateMail($userId, $email)
+    {
+        $query = "UPDATE $this->tablename SET $this->columnEmail = ? WHERE $this->columnId = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('si', $email, $userId);
+        if (!$statement->execute()) {
+            throw new Exception($statement->error);
+        }
+    }
+
+    public function updatePassword($userId, $password)
+    {
+        $password = password_hash($password, PASSWORD_DEFAULT);
+        $query = "UPDATE $this->tablename SET $this->columnPassword = ? WHERE $this->columnId = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('si', $password, $userId);
+        if (!$statement->execute()) {
+            throw new Exception($statement->error);
+        }
+    }
+
+    public function updateApiKey($userId, $apiKey) {
+        $password = password_hash($apiKey, PASSWORD_DEFAULT);
+        $query = "UPDATE $this->tablename SET $this->columnApiKey = ? WHERE $this->columnId = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('si', $apiKey, $userId);
+        if (!$statement->execute()) {
+            throw new Exception($statement->error);
+        }
     }
 
     public function deleteById($id)
@@ -40,51 +107,6 @@ class UserRepository extends Repository
         }
     }
 
-
-    public function readByUsername($username)
-    {
-        $query = "SELECT * FROM $this->tablename WHERE $this->columnUsername = ?";
-
-        $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('s', $username);
-        $statement->execute();
-
-        return $this->processSingleResult($statement->get_result());
-    }
-
-    public function add($username, $email, $password)
-    {
-        $query = "INSERT INTO $this->tablename ($this->columnUsername, $this->columnEmail, $this->columnPassword) VALUES (?, ?, ?)";
-
-        $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('sss', $username, $email, password_hash($password, PASSWORD_DEFAULT));
-        if (!$statement->execute()) {
-            throw new Exception($statement->error);
-        }
-    }
-
-    public function updateMail($userId, $mail)
-    {
-        $query = "UPDATE $this->tablename SET $this->columnEmail = ? WHERE $this->columnId = ?";
-
-        $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('si', $mail, $userId);
-        if (!$statement->execute()) {
-            throw new Exception($statement->error);
-        }
-    }
-
-    public function updatePassword($userId, $password)
-    {
-        $password = password_hash($password, PASSWORD_DEFAULT);
-        $query = "UPDATE $this->tablename SET $this->columnPassword = ? WHERE $this->columnEmail = ?";
-
-        $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('si', $password, $userId);
-        if (!$statement->execute()) {
-            throw new Exception($statement->error);
-        }
-    }
 
     public function countUsers()
     {

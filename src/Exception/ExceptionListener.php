@@ -27,13 +27,13 @@ class ExceptionListener
             $message = $error;
         }
 
-        $view = new View('error');
-        $view->title = 'Fehler';
-        $view->heading = '❌ Ein Fehler ist aufgetretten';
+        $view = new View('general/error');
+        $view->title = 'Error';
+        $view->heading = '❌ A Error has occured';
         $view->userMessage = $message;
 
         if ($exception instanceof DatabaseConnectionException) {
-            $view->userMessage = 'Bitte kontaktieren Sie den Administrator';
+            $view->userMessage = 'Please contact the Administrator of this Website';
         }
 
         $view->display();

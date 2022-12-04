@@ -3,25 +3,18 @@
 namespace App\Controller;
 
 use App\Authentication\Authentication;
-use App\Repository\CustomerRepository;
-use App\Repository\ItemRepository;
 use App\Repository\UserRepository;
 use App\View\View;
 
 class UserController
 {
     private $UserRepo;
-    private $CustomerRepo;
-    private $ItemRepo;
 
     function __construct()
     {
         $this->UserRepo = new UserRepository();
-        $this->CustomerRepo = new CustomerRepository();
-        $this->ItemRepo = new ItemRepository();
     }
 
-    /* Unsecured Views */
     public function index()
     {
         $this->home();
@@ -43,19 +36,13 @@ class UserController
         $view->display();
     }
 
-    /* Secured Views */
     public function home()
     {
         Authentication::restrictAuthenticated();
 
-        $customers = $this->CustomerRepo->countCustomers($_SESSION['userID'])->number;
-        $items = $this->ItemRepo->countItems($_SESSION["userID"])->number;
-
         $view = new View('user/home');
         $view->title = 'Home';
         $view->heading = 'Hey ' . htmlentities($this->UserRepo->readById($_SESSION['userID'])->username) . '!';
-        $view->customers = $customers;
-        $view->items = $items;
         $view->display();
     }
 
@@ -77,10 +64,10 @@ class UserController
             if (Authentication::login($_POST['usernameInput'], $_POST['passwordInput'])) {
                 header('Location: /');
             } else {
-                header('Location: /default/error?errorid=9&target=/user/login');
+                header('Location: /default/error?errorid=1&target=/user/login');
             }
         } else {
-            header('Location: /default/error?errorid=1&target=/user/login');
+            header('Location: /default/error?errorid=2&target=/user/login');
         }
     }
 
@@ -99,25 +86,30 @@ class UserController
                     if (filter_var($_POST['emailInput'], FILTER_VALIDATE_EMAIL)) {
                         if (preg_match('/(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}/m', $_POST['passwordInput'])) {
                             if ($_POST['passwordInput'] === $_POST['passwordRepeatInput']) {
-                                $this->UserRepo->add($_POST['usernameInput'], $_POST['emailInput'], $_POST['passwordInput']);
+                                $apiKey = substr(bin2hex(random_bytes(32)), 5, 25);
+                                while($this->UserRepo->readByApiKey($apiKey) != null) {
+                                    $apiKey = substr(bin2hex(random_bytes(32)), 5, 25);
+                                }
+
+                                $this->UserRepo->create($_POST['usernameInput'], $_POST['emailInput'], $_POST['passwordInput'], $apiKey);
                                 header('Location: /');
                             } else {
-                                header('Location: /default/error?errorid=8&target=/user/register');
+                                header('Location: /default/error?errorid=1&target=/user/register');
                             }
                         } else {
-                            header('Location: /default/error?errorid=6&target=/user/register');
+                            header('Location: /default/error?errorid=1&target=/user/register');
                         }
                     } else {
-                        header('Location: /default/error?errorid=5&target=/user/register');
+                        header('Location: /default/error?errorid=1&target=/user/register');
                     }
                 } else {
-                    header('Location: /default/error?errorid=4&target=/user/register');
+                    header('Location: /default/error?errorid=1&target=/user/register');
                 }
             } else {
-                header('Location: /default/error?errorid=2&target=/user/register');
+                header('Location: /default/error?errorid=1&target=/user/register');
             }
         } else {
-            header('Location: /default/error?errorid=1&target=/user/register');
+            header('Location: /default/error?errorid=2&target=/user/register');
         }
     }
 
@@ -132,10 +124,10 @@ class UserController
                 Authentication::logout();
                 header('Location: /');
             } else {
-                header('Location: /default/error?errorid=7&target=/user/settings');
+                header('Location: /default/error?errorid=1&target=/user/profile');
             }
         } else {
-            header('Location: /default/error?errorid=1&target=/user/settings');
+            header('Location: /default/error?errorid=2&target=/user/profile');
         }
     }
 
@@ -147,16 +139,16 @@ class UserController
             $user = $this->UserRepo->readById($_SESSION['userID']);
             if (Authentication::login($user->username, $_POST['passwordInput'])) {
                 if (filter_var($_POST['emailInput'], FILTER_VALIDATE_EMAIL)) {
-                    $this->UserRepo->updateMail($_POST['emailInput'], $_SESSION['userID']);
-                    header('Location: /user/settings');
+                    $this->UserRepo->updateMail($_SESSION['userID'], $_POST['emailInput']);
+                    header('Location: /user/profile');
                 } else {
-                    header('Location: /default/error?errorid=5&target=/user/settings');
+                    header('Location: /default/error?errorid=1&target=/user/profile');
                 }
             } else {
-                header('Location: /default/error?errorid=7&target=/user/settings');
+                header('Location: /default/error?errorid=1&target=/user/profile');
             }
         } else {
-            header('Location: /default/error?errorid=1&target=/user/settings');
+            header('Location: /default/error?errorid=2&target=/user/profile');
         }
     }
 
@@ -169,21 +161,50 @@ class UserController
             if (Authentication::login($user->username, $_POST['passwordInput'])) {
                 if (preg_match('/(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}/m', $_POST['passwordInput'])) {
                     if ($_POST['passwordInputNew'] == $_POST['passwordRepeatInput']) {
-                        $this->UserRepo->updatePassword($_POST['passwordInputNew'], $_SESSION['userID']);
+                        $this->UserRepo->updatePassword($_SESSION['userID'], $_POST['passwordInputNew']);
                         Authentication::logout();
                         header('Location: /');
                     } else {
-                        header('Location: /default/error?errorid=8&target=/user/settings');
+                        header('Location: /default/error?errorid=1&target=/user/profile');
                     }
                 } else {
-                    header('Location: /default/error?errorid=6&target=/user/settings');
+                    header('Location: /default/error?errorid=1&target=/user/profile');
                 }
             } else {
-                header('Location: /default/error?errorid=7&target=/user/settings');
+                header('Location: /default/error?errorid=1&target=/user/profile');
             }
         } else {
-            header('Location: /default/error?errorid=1&target=/user/settings');
+            header('Location: /default/error?errorid=2&target=/user/profile');
         }
+    }
+
+
+    public function doGetApiKey() {
+        if (is_string($_POST['username']) && is_string($_POST['password'])) {
+            if (Authentication::login($_POST['username'], $_POST['password'])) {
+                $apiKey = $this->UserRepo->readById($_SESSION['userID'])->apiKey;
+
+                Authentication::logout();
+                echo json_encode($apiKey);
+            } else {
+                echo json_encode(false);
+            }
+        } else {
+            echo json_encode(false);
+        }
+    }
+
+    public function doRotateApiKey() {
+        Authentication::restrictAuthenticated();
+        
+        $apiKey = substr(bin2hex(random_bytes(32)), 5, 25);
+        while($this->UserRepo->readByApiKey($apiKey) != null) {
+            $apiKey = substr(bin2hex(random_bytes(32)), 5, 25);
+        }
+
+        $this->UserRepo->updateApiKey($_SESSION['userID'], $apiKey);
+
+        header('Location: /user/profile');
     }
 
     public function doCheckUsernameAvailable()

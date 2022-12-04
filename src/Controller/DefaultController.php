@@ -6,9 +6,12 @@ use App\View\View;
 
 class DefaultController
 {
-    private $errorCodes = array("Ein unbekannter Fehler ist aufgetreten", "Dieser Benutzername ist ungültig", "Dieser Benutzer ist nicht vorhanden", "Dieser Benutzername ist bereits vergeben", "Diese E-Mail ist ungültig", "Dieses Passwort ist ungültig", "Das eingegebene Passwort ist falsch", "Die beiden Passwörter stimmen nicht überein", "Dein Benutzername oder Passwort ist falsch", "Du verfügst nicht über die nötigen Rechte, um diese Seite zu besuchen");
+    private $errorCodes = array(
+        "Unknown Error", 
+        "Input Error", 
+        "Permission Error"
+    );
 
-    /* Unsecured Views */
     public function index()
     {
         $controller = new UserController();
@@ -19,7 +22,7 @@ class DefaultController
     {
         $view = new View('default/about');
         $view->title = 'About us ❤️';
-        $view->heading = 'About Europa';
+        $view->heading = 'About Web-MVC';
         $view->display();
     }
 
@@ -27,7 +30,7 @@ class DefaultController
     {
         $view = new View('default/privacy');
         $view->title = 'Privacy';
-        $view->heading = 'Privacy';
+        $view->heading = 'Privacy is essential';
         $view->display();
     }
 
@@ -46,7 +49,7 @@ class DefaultController
                 header('Location: /default/error?errorid=1&target=/');
             }
         } else {
-            header('Location: /default/error?errorid=1&target=/');
+            header('Location: /default/error?errorid=2&target=/');
         }
     }
 }

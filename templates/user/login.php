@@ -4,18 +4,18 @@
 
             <form action="/user/doLogin" method="post" class="needs-validation" novalidate>
 
-                <div class="form-group mb-3">
+                <div class="form-group mb-2">
                     <input required type="text" placeholder="Username" class="form-control" data-toggle="tooltip"
-                           title="Enter username"
+                           title="Enter Username"
                            name="usernameInput">
-                    <div class="invalid-feedback">Enter username</div>
+                    <div class="invalid-feedback">Enter Username</div>
                 </div>
 
-                <div class="form-group mb-3">
+                <div class="form-group mb-2">
                     <input required type="password" placeholder="Password" class="form-control" data-toggle="tooltip"
-                           title="Enter password"
+                           title="Enter Password"
                            name="passwordInput">
-                    <div class="invalid-feedback">Enter password</div>
+                    <div class="invalid-feedback">Enter Password</div>
                 </div>
 
                 <button type="submit" class="btn btn-secondary" data-toggle="tooltip" title="Login">
@@ -28,11 +28,10 @@
 </div>
 
 <div class="mt-5">
-    <a href="/user/register" class="align-self-end" data-toggle="tooltip" title="Zur Registrierung"><p>Not yet registered?<br>Register</p></a>
+    <a href="/user/register" class="align-self-end" data-toggle="tooltip" title="Register"><p>Not yet registered?<br>Register</p></a>
 </div>
 
 <script>
-    /* Form Validation */
     (function () {
         'use strict';
         window.addEventListener('load', function () {

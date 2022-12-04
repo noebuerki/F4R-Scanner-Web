@@ -4,29 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description"
-          content="Gradely ist das revolutionäre Notemanagement-Tool für Schüler, Lernende und Studenten">
+          content="F4R-Scanner developed by Noé Bürki">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
-            crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
 
-    <title><?= $title; ?> | Europa</title>
+    <title><?= $title; ?> | F4R-Scanner</title>
 </head>
 <body>
 <header>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
-        <button class="navbar-toggler navbar-toggler-button" type="button" data-toggle="collapse"
-                data-target="#navbarText" aria-controls="navbarText" aria-expanded="false"
+        <button class="navbar-toggler navbar-toggler-button" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false"
                 aria-label="Toggle navigation">
             <img src="/images/menu-icon.png" class="navbar-toggler-icon navbar-toggler-image" alt="Menu">
         </button>
         <a href="/user">
-            <img src="/images/logo.png" data-toggle="tooltip" title="Europa | Home"
-                 class="navbar-brand navbar-brand-icon" alt="Europa Logo">
+            <img src="/images/logo.png" data-toggle="tooltip" title="F4R-Scanner | Home"
+                 class="navbar-brand navbar-brand-icon" alt="F4R-Scanner Logo">
         </a>
 
         <?php
@@ -59,29 +56,7 @@
                         <a class="nav-link" href="/user">Home</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="/customer/search">Customers</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/customer/create">Add customer</a></li>
-                            <li><a class="dropdown-item" href="/customer/search">Search customer</a></li>
-                            <li><a class="dropdown-item" href="/customer/delete">Delete customer</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="/item/search">Items</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/item/search">Search owner</a></li>
-                            <li><a class="dropdown-item" href="/item/scan">Scan barcode</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="/document/invoice">Documents</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/document/invoice">Create invoice</a></li>
-                        <li><a class="dropdown-item" href="/document/stock">Create stock report</a></li>
-                    </ul>
-                </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/user/settings">Settings</a>
+                        <a class="nav-link dropdown-toggle" href="/section/overview">Sections</a>
                     </li>
                 ';
                 } else {
@@ -90,7 +65,7 @@
                         <a class="nav-link" href="/user/login">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/user/register">Registrieren</a>
+                        <a class="nav-link" href="/user/register">Register</a>
                     </li>
                     ';
                 }

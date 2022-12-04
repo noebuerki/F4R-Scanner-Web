@@ -8,7 +8,7 @@ class DatabaseConnectionException extends Exception
 {
     public function __construct($errors)
     {
-        $message = 'Verbindungsfehler zur Datenbank';
+        $message = 'Can`t connect to Database';
         $code = 0;
         $previous = null;
 

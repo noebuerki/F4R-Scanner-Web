@@ -33,12 +33,7 @@ class View
     {
         extract($this->properties);
 
-        if ($this->isDocument) {
-            require './../templates/general/documentHeader.php';
-        } else {
-            require './../templates/general/header.php';
-        }
-
+        require './../templates/general/header.php';
         require $this->viewfile;
         require './../templates/general/footer.php';
     }

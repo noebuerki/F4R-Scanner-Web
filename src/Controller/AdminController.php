@@ -11,17 +11,12 @@ class AdminController
 {
 
     private $UserRepo;
-    private $CustomerRepo;
-    private $ItemRepo;
 
     function __construct()
     {
         $this->UserRepo = new UserRepository();
-        $this->CustomerRepo = new CustomerRepository();
-        $this->ItemRepo = new ItemRepository();
     }
 
-    /* Secured Views */
     public function index()
     {
         $this->overview();
@@ -35,8 +30,6 @@ class AdminController
         $view->title = '🍌';
         $view->heading = 'Admin-Panel';
         $view->UserCount = $this->UserRepo->countUsers()->number;
-        $view->CustomerCount = $this->CustomerRepo->countCustomers()->number;
-        $view->ItemCount = $this->ItemRepo->countItems()->number;
         $view->display();
     }
 
@@ -45,8 +38,8 @@ class AdminController
         Authentication::restrictAdmin();
 
         $view = new View('admin/usermanager');
-        $view->title = 'Benutzerverwaltung';
-        $view->heading = 'Benutzer verwalten';
+        $view->title = 'User-Management';
+        $view->heading = 'User-Management';
         $view->display();
     }
 
@@ -63,16 +56,16 @@ class AdminController
                         $this->UserRepo->updatePassword($_POST['passwordInputNew'], $user->id);
                         header('Location: /admin/usermanager');
                     } else {
-                        header('Location: /default/error?errorid=8&target=/admin/usermanager');
+                        header('Location: /default/error?errorid=1&target=/admin/usermanager');
                     }
                 } else {
-                    header('Location: /default/error?errorid=6&target=/admin/usermanager');
+                    header('Location: /default/error?errorid=1&target=/admin/usermanager');
                 }
             } else {
-                header('Location: /default/error?errorid=3&target=/admin/usermanager');
+                header('Location: /default/error?errorid=1&target=/admin/usermanager');
             }
         } else {
-            header('Location: /default/error?errorid=1&target=/admin');
+            header('Location: /default/error?errorid=2&target=/admin/usermanager');
         }
     }
 
@@ -86,10 +79,10 @@ class AdminController
                 $this->UserRepo->deleteById($user->id);
                 header('Location: /admin/usermanager');
             } else {
-                header('Location: /default/error?errorid=3&target=/admin/usermanager');
+                header('Location: /default/error?errorid=1&target=/admin/usermanager');
             }
         } else {
-            header('Location: /default/error?errorid=1&target=/admin');
+            header('Location: /default/error?errorid=2&target=/admin/usermanager');
         }
     }
 }

@@ -7,24 +7,34 @@ use Exception;
 
 require_once '../src/DataBase/ConnectionHandler.php';
 
-class ItemRepository extends Repository
+class SectionRepository extends Repository
 {
-    protected $tablename = "item";
+    protected $tablename = "section";
 
-    private $columnPosition = "position";
-    private $columnSectionId = "sectionId";
-    private $columnBarcode = "barcode";
+    private $columnNumber = "number";
+    private $columnTargetNumber = "targetNumber";
+    private $columnScanner = "scanner";
     private $columnUserId = "userId";
 
-    public function create($position, $sectionId, $barcode, $userId)
+    public function create($number, $targetNumber, $scanner, $userId)
     {
-        $query = "INSERT INTO $this->tablename ($this->columnPosition, $this->columnSectionId, $this->columnBarcode, $this->columnUserId) VALUES (?, ?, ?, ?)";
+        $query = "INSERT INTO $this->tablename ($this->columnNumber, $this->columnTargetNumber, $this->columnScanner, $this->columnUserId) VALUES (?, ?, ?, ?)";
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('iisi', $number, $targetNumber, $scanner, $userId);
+        $statement->bind_param('iiii', $number, $targetNumber, $scanner, $userId);
         if (!$statement->execute()) {
             throw new Exception($statement->error);
         }
+    }
+
+    public function readAll($userId) {
+        $query = "SELECT * FROM $this->tablename WHERE $this->columnUserId = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('i', $userId);
+        $statement->execute();
+
+        return $this->processMultipleResults($statement->get_result());
     }
 
     public function readByID($id, $userId)
@@ -38,14 +48,14 @@ class ItemRepository extends Repository
         return $this->processSingleResult($statement->get_result());
     }
 
-    public function readBySection($sectionId, $userId) {
-        $query = "SELECT * FROM $this->tablename WHERE $this->columnSectionId = ? AND $this->columnUserId = ?";
+    public function readByNumber($number, $userId) {
+        $query = "SELECT * FROM $this->tablename WHERE $this->columnNumber = ? AND $this->columnUserId = ?";
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('ii', $sectonId, $userId);
+        $statement->bind_param('ii', $number, $userId);
         $statement->execute();
 
-        return $this->processMultipleResults($statement->get_result());
+        return $this->processSingleResult($statement->get_result());
     }
 
     public function deleteById($id, $userId)
@@ -60,7 +70,7 @@ class ItemRepository extends Repository
         }
     }
 
-    public function countItems($userId)
+    public function countSections($userId)
     {
         $query = "SELECT count(*) AS 'number' FROM $this->tablename WHERE $this->columnUserId = ?";
 
@@ -71,7 +81,7 @@ class ItemRepository extends Repository
         return $this->processSingleResult($statement->get_result());
     }
 
-    public function countTotalItems()
+    public function countTotalSections()
     {
         $query = "SELECT count(*) AS 'number' FROM $this->tablename";
 
