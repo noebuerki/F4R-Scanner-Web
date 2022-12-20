@@ -7,23 +7,19 @@ use Exception;
 
 require_once '../src/DataBase/ConnectionHandler.php';
 
-class SectionRepository extends Repository
+class StocktakingRepository extends Repository
 {
-    protected $tablename = "section";
-
-    private $columnNumber = "number";
-    private $columnTargetQuantity = "targetQuantity";
-    private $columnBranch = "branch";
-    private $columnDeviceNumber = "deviceNumber";
-    private $columnStocktakingId = "stocktakingId";
+    protected $tablename = "stocktaking";
+    private $columnDate = "date";
+    private $columnTime = "time";
     private $columnUserId = "userId";
 
-    public function create($number, $targetQuantity, $branch, $deviceNumber, $stocktakingId, $userId)
+    public function create($date, $time, $userId)
     {
-        $query = "INSERT INTO $this->tablename ($this->columnNumber, $this->columnTargetQuantity, $this->columnBranch, $this->columnDeviceNumber, $this->columnStocktakingId, $this->columnUserId) VALUES (?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO $this->tablename ($this->columnDate, $this->columnTime, $this->columnUserId) VALUES (?, ?, ?)";
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('iiiiii', $number, $targetQuantity, $branch, $deviceNumber, $stocktakingId, $userId);
+        $statement->bind_param('ssi', $date, $time, $userId);
         if (!$statement->execute()) {
             throw new Exception($statement->error);
         }
@@ -49,27 +45,6 @@ class SectionRepository extends Repository
 
         return $this->processSingleResult($statement->get_result());
     }
-
-    public function readByStocktaking($stocktakingId, $userId) {
-        $query = "SELECT * FROM $this->tablename WHERE $this->columnStocktakingId = ? AND $this->columnUserId = ?";
-
-        $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('ii', $stocktakingId, $userId);
-        $statement->execute();
-
-        return $this->processMultipleResults($statement->get_result());
-    }
-
-    public function readByNumberAndStocktaking($number, $stocktakingId, $userId) {
-        $query = "SELECT * FROM $this->tablename WHERE $this->columnNumber = ? AND $this->columnStocktakingId = ? AND $this->columnUserId = ?";
-
-        $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('iii', $number, $stocktakingId, $userId);
-        $statement->execute();
-
-        return $this->processSingleResult($statement->get_result());
-    }
-
     public function deleteById($id, $userId)
     {
         $query = "DELETE FROM $this->tablename WHERE $this->columnId = ? AND $this->columnUserId = ?";
@@ -82,7 +57,7 @@ class SectionRepository extends Repository
         }
     }
 
-    public function countSections($userId)
+    public function countStocktakings($userId)
     {
         $query = "SELECT count(*) AS 'number' FROM $this->tablename WHERE $this->columnUserId = ?";
 
@@ -93,7 +68,7 @@ class SectionRepository extends Repository
         return $this->processSingleResult($statement->get_result());
     }
 
-    public function countTotalSections()
+    public function countTotalStocktakings()
     {
         $query = "SELECT count(*) AS 'number' FROM $this->tablename";
 

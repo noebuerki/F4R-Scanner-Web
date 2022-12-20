@@ -22,7 +22,7 @@ class DefaultController
     {
         $view = new View('default/about');
         $view->title = 'About us ❤️';
-        $view->heading = 'About Web-MVC';
+        $view->heading = 'About F4R-Scanner';
         $view->display();
     }
 

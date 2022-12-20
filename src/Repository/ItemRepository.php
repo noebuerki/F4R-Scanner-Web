@@ -12,16 +12,16 @@ class ItemRepository extends Repository
     protected $tablename = "item";
 
     private $columnPosition = "position";
-    private $columnSectionId = "sectionId";
     private $columnBarcode = "barcode";
+    private $columnSectionId = "sectionId";
     private $columnUserId = "userId";
 
-    public function create($position, $sectionId, $barcode, $userId)
+    public function create($position, $barcode, $sectionId, $userId)
     {
-        $query = "INSERT INTO $this->tablename ($this->columnPosition, $this->columnSectionId, $this->columnBarcode, $this->columnUserId) VALUES (?, ?, ?, ?)";
+        $query = "INSERT INTO $this->tablename ($this->columnPosition, $this->columnBarcode, $this->columnSectionId, $this->columnUserId) VALUES (?, ?, ?, ?)";
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('iisi', $number, $targetNumber, $scanner, $userId);
+        $statement->bind_param('iisi', $position, $barcode, $sectionId, $userId);
         if (!$statement->execute()) {
             throw new Exception($statement->error);
         }
@@ -42,10 +42,20 @@ class ItemRepository extends Repository
         $query = "SELECT * FROM $this->tablename WHERE $this->columnSectionId = ? AND $this->columnUserId = ?";
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('ii', $sectonId, $userId);
+        $statement->bind_param('ii', $sectionId, $userId);
         $statement->execute();
 
         return $this->processMultipleResults($statement->get_result());
+    }
+
+    public function readByPosition($position, $sectionId, $userId) {
+        $query = "SELECT * FROM $this->tablename WHERE $this->columnPosition = ? AND $this->columnSectionId = ? AND $this->columnUserId = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('iii', $position, $sectionId, $userId);
+        $statement->execute();
+
+        return $this->processSingleResult($statement->get_result());
     }
 
     public function deleteById($id, $userId)
@@ -77,6 +87,17 @@ class ItemRepository extends Repository
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
         $statement->execute();
+        return $this->processSingleResult($statement->get_result());
+    }
+
+    public function countItemsBySection($sectionId, $userId)
+    {
+        $query = "SELECT count(*) AS 'number' FROM $this->tablename WHERE $this->columnSectionId = ? AND $this->columnUserId = ?";
+
+        $statement = ConnectionHandler::getConnection()->prepare($query);
+        $statement->bind_param('ii', $sectionId, $userId);
+        $statement->execute();
+
         return $this->processSingleResult($statement->get_result());
     }
 }

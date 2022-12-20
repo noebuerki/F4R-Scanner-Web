@@ -55,8 +55,8 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/user">Home</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="/section/overview">Sections</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/stocktaking/overview">Stocktakings</a>
                     </li>
                 ';
                 } else {

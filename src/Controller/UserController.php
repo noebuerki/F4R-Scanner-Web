@@ -4,15 +4,24 @@ namespace App\Controller;
 
 use App\Authentication\Authentication;
 use App\Repository\UserRepository;
+use App\Repository\StocktakingRepository;
+use App\Repository\SectionRepository;
+use App\Repository\ItemRepository;
 use App\View\View;
 
 class UserController
 {
     private $UserRepo;
+    private $StocktakingRepo;
+    private $SectionRepo;
+    private $ItemRepo;
 
     function __construct()
     {
         $this->UserRepo = new UserRepository();
+        $this->StocktakingRepo = new StocktakingRepository();
+        $this->SectionRepo = new SectionRepository();
+        $this->ItemRepo = new ItemRepository();
     }
 
     public function index()
@@ -43,6 +52,9 @@ class UserController
         $view = new View('user/home');
         $view->title = 'Home';
         $view->heading = 'Hey ' . htmlentities($this->UserRepo->readById($_SESSION['userID'])->username) . '!';
+        $view->stocktakings = $this->StocktakingRepo->readAll($_SESSION['userID']);
+        $view->sections = $this->SectionRepo->countSections($_SESSION['userID']);
+        $view->items = $this->ItemRepo->countItems($_SESSION['userID']);
         $view->display();
     }
 

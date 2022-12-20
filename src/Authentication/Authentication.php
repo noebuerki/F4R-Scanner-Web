@@ -49,8 +49,9 @@ class Authentication
     }
 
     public static function authenticateApiKey($apiKey) {
+        self::checkUserRepo();
         $user = Authentication::$UserRepo->readByApiKey($apiKey);
-        return $user != null;
+        return $user;
     }
 
     public static function restrictAdmin()
