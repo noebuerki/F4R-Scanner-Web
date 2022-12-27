@@ -46,7 +46,7 @@ class SectionController
 
             $view = new View('section/overview');
             $view->title = 'Section Overview';
-            $view->heading = 'Section Overview of Stocktaking ' . $_GET['stocktakingId'];
+            $view->heading = 'Section Overview of Stocktaking';
             $view->stocktaking = $this->StocktakingRepo->readByID($_GET['stocktakingId'], $_SESSION['userID']);
             $view->sections = $sections;
             $view->display();
@@ -62,12 +62,12 @@ class SectionController
     {
         $request = json_decode(file_get_contents('php://input'));
 
-        if (is_string($request->apiKey) && is_string($request->number) && is_string($request->targetQuantity) && is_string($request->branch) && is_string($request->deviceNumber) && is_string($request->stocktaking)) {
+        if (is_string($request->apiKey) && is_string($request->number) && is_string($request->targetQuantity) && is_string($request->stocktaking)) {
             $user = Authentication::authenticateApiKey($request->apiKey);
             if ($user != null) {
                 if ($this->StocktakingRepo->readByID($request->stocktaking, $user->id) != null) {
                     if ($this->SectionRepo->readByNumberAndStocktaking($request->number, $request->stocktaking, $user->id) == null) {
-                        $this->SectionRepo->create($request->number, $request->targetQuantity, $request->branch, $request->deviceNumber, $request->stocktaking, $user->id);
+                        $this->SectionRepo->create($request->number, $request->targetQuantity, $request->stocktaking, $user->id);
                     } else {
                         echo 'taken';
                     }

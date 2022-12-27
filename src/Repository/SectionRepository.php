@@ -13,17 +13,15 @@ class SectionRepository extends Repository
 
     private $columnNumber = "number";
     private $columnTargetQuantity = "targetQuantity";
-    private $columnBranch = "branch";
-    private $columnDeviceNumber = "deviceNumber";
     private $columnStocktakingId = "stocktakingId";
     private $columnUserId = "userId";
 
-    public function create($number, $targetQuantity, $branch, $deviceNumber, $stocktakingId, $userId)
+    public function create($number, $targetQuantity, $stocktakingId, $userId)
     {
-        $query = "INSERT INTO $this->tablename ($this->columnNumber, $this->columnTargetQuantity, $this->columnBranch, $this->columnDeviceNumber, $this->columnStocktakingId, $this->columnUserId) VALUES (?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO $this->tablename ($this->columnNumber, $this->columnTargetQuantity, $this->columnStocktakingId, $this->columnUserId) VALUES (?, ?, ?, ?)";
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('iiiiii', $number, $targetQuantity, $branch, $deviceNumber, $stocktakingId, $userId);
+        $statement->bind_param('iiii', $number, $targetQuantity, $stocktakingId, $userId);
         if (!$statement->execute()) {
             throw new Exception($statement->error);
         }

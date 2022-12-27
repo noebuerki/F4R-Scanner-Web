@@ -13,7 +13,7 @@ CREATE TABLE `user` (
 CREATE TABLE `stocktaking` (
     `id`INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `date` VARCHAR(10) NOT NULL,
-    `time` VARCHAR(9) NOT NULL,
+    `branch`INT NOT NULL,
     `userId` INT NOT NULL,
     FOREIGN KEY (userId) REFERENCES user(id)
     ON UPDATE CASCADE ON DELETE CASCADE
@@ -23,8 +23,6 @@ CREATE TABLE `section`(
     `id`INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `number` INT NOT NULL,
     `targetQuantity` INT NOT NULL,
-    `branch`INT NOT NULL,
-    `deviceNumber`INT NOT NULL,
     `stocktakingId` INT NOT NULL,
     `userId` INT NOT NULL,
     FOREIGN KEY (stocktakingId) REFERENCES stocktaking(id)

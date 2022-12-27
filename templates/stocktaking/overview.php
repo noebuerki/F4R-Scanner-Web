@@ -10,7 +10,8 @@
                     <div class="mb-4 col align-items-center">
                         <i class="bi bi-box-arrow-in-right mt-1 align-self-end" style="margin-left: 94%"></i>
                         <p>Stocktaking</p>
-                        <p class="mb-4">' . $stocktaking->date . ', ' . $stocktaking->time . '</p>
+                        <p class="mb-1">Branch ' . $stocktaking->branch . '</p>
+                        <p class="mb-4">' . $stocktaking->date . '</p>
                     </div>
                 </a>
             </div>';

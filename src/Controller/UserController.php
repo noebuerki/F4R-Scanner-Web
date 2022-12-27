@@ -192,17 +192,20 @@ class UserController
 
 
     public function doGetApiKey() {
-        if (is_string($_POST['username']) && is_string($_POST['password'])) {
-            if (Authentication::login($_POST['username'], $_POST['password'])) {
+
+        $request = json_decode(file_get_contents('php://input'));
+
+        if (is_string($request->username) && is_string($request->password)) {
+            if (Authentication::login($request->username, $request->password)) {
                 $apiKey = $this->UserRepo->readById($_SESSION['userID'])->apiKey;
 
                 Authentication::logout();
-                echo json_encode($apiKey);
+                echo $apiKey;
             } else {
-                echo json_encode(false);
+                echo 'forbidden';
             }
         } else {
-            echo json_encode(false);
+            echo 'incomplete';
         }
     }
 

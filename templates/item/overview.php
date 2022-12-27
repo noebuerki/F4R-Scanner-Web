@@ -9,7 +9,8 @@
                 <a href="/item/detail?id=' . $item->id . '" role="button" class="btn btn-info text-white w-100 mb-4">
                     <div class="mb-4 col align-items-center">
                         <i class="bi bi-box-arrow-in-right mt-1 align-self-end" style="margin-left: 94%"></i>
-                        <p class="mb-1">Item ' . $item->position . ' / ' . $section->targetQuantity . '</p>
+                        <p>Item</p>
+                        <p class="mb-1">Position ' . $item->position . ' / ' . $section->targetQuantity . '</p>
                         <p class=mb-4">' . htmlentities($item->barcode) . '</p>
                     </div>
                 </a>

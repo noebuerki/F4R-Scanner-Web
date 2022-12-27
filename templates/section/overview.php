@@ -10,9 +10,7 @@
                     <div class="mb-4 col align-items-center">
                         <i class="bi bi-box-arrow-in-right mt-1 align-self-end" style="margin-left: 94%"></i>
                         <p>Section ' . $section->number . '</p>
-                        <p class="mb-1">' . $section->itemCount . ' / ' . $section->targetQuantity . ' Items</p>
-                        <p class="mb-1">Branch ' . $section->branch . '</p>
-                        <p class="mb-4">Scanner ' . $section->deviceNumber . '</p>
+                        <p class="mb-4">' . $section->itemCount . ' / ' . $section->targetQuantity . ' Items</p>
                     </div>
                 </a>
             </div>';
@@ -25,6 +23,10 @@
     <a href="/stocktaking/overview" role="button" class="btn btn-secondary" data-toggle="tooltip"
        title="Back">
         <img src="/images/arrow.svg" width="32" height="32" class="my-1" alt="Left-Arrow, Back">
+    </a>
+    <a href="/stocktaking/doExport?id=<?php echo $stocktaking->id; ?>" role="button" class="btn btn-secondary" data-toggle="tooltip"
+       title="Export Stocktaking">
+        <img src="/images/export.svg" width="32" height="32" class="my-1" alt="Delete Stocktaking">
     </a>
     <a href="/stocktaking/doDelete?id=<?php echo $stocktaking->id; ?>" role="button" class="btn btn-danger" data-toggle="tooltip"
        title="Delete Stocktaking">

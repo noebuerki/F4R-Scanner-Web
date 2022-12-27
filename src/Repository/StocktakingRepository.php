@@ -11,15 +11,15 @@ class StocktakingRepository extends Repository
 {
     protected $tablename = "stocktaking";
     private $columnDate = "date";
-    private $columnTime = "time";
+    private $columnBranch = "branch";
     private $columnUserId = "userId";
 
-    public function create($date, $time, $userId)
+    public function create($date, $branch, $userId)
     {
-        $query = "INSERT INTO $this->tablename ($this->columnDate, $this->columnTime, $this->columnUserId) VALUES (?, ?, ?)";
+        $query = "INSERT INTO $this->tablename ($this->columnDate, $this->columnBranch, $this->columnUserId) VALUES (?, ?, ?)";
 
         $statement = ConnectionHandler::getConnection()->prepare($query);
-        $statement->bind_param('ssi', $date, $time, $userId);
+        $statement->bind_param('sii', $date, $branch, $userId);
         if (!$statement->execute()) {
             throw new Exception($statement->error);
         }

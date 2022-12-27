@@ -46,21 +46,53 @@ class StocktakingController
         $view->display();
     }
 
-    public function export() {
+    public function doCreate()
+    {
         Authentication::restrictAuthenticated();
 
-        if(is_int($_GET['stocktakingId'])) {
-            $stocktaking = $this->StocktakingRepo->readByID($_GET['stocktakingId'], $_SESSION['userId']);
+        if (is_string($_POST['date']) && is_numeric($_POST['branch'])) {
+            $this->StocktakingRepo->create($_POST['date'], $_POST['branch'], $_SESSION['userID']);
+            header('Location: /stocktaking/overview');
+        } else {
+            header('Location: /default/error?errorid=2&target=/');
+        }
+    }
+
+    public function doGetStocktakings() {
+        $request = json_decode(file_get_contents('php://input'));
+
+        if (is_string($request->apiKey)) {
+            $user = Authentication::authenticateApiKey($request->apiKey);
+            if ($user != null) {
+                echo json_encode($this->StocktakingRepo->readAll($user->id));
+            } else {
+                echo 'forbidden';
+            }
+        } else {
+            echo 'incomplete';
+        }
+    }
+
+    public function doExport() {
+        Authentication::restrictAuthenticated();
+
+        if(is_numeric($_GET['id'])) {
+            $stocktaking = $this->StocktakingRepo->readByID($_GET['id'], $_SESSION['userID']);
 
             if ($stocktaking != null) {
-                $text = "RT00\n1\t\t31.12.2022\t16:00:00\t2\t\nRT38\n";
+
+                date_default_timezone_set('Europe/Zurich');
+                $date = date('d.m.Y', time());
+                $time = date('h:i:s', time());
+
+                $text = "RT00\n1\t\t$date\t$time\t2\t\nRT38\n";
 
                 $sections = $this->SectionRepo->readAll($_SESSION['userID']);
                 foreach($sections as $section) {
                     $items = $this->ItemRepo->readBySection($section->id, $_SESSION['userID']);
         
                     foreach($items as $item) {
-                        $text .= $item->barcode . "\t0\t" + $section->scanner . "\t31.12.2022\t" . $section->number . "\t" . $item->position . "\t1,00\t0\t0\t\t0\t0\t0\t0\t0\t\t\n";
+                        $text .= "$item->barcode\t0\t$stocktaking->branch\t$stocktaking->date\t$section->number\t$item->position\t1,00\t0\t0\t\t0\t0\t0\t0\t0\t\t\n";
                     }
                 }
         
@@ -80,36 +112,11 @@ class StocktakingController
                 header('Content-Length: ' . filesize($path));
                 header("Content-Type: text/plain");
                 readfile($path);
-            }
-        }
-
-        
-    }
-
-    public function doCreate()
-    {
-        Authentication::restrictAuthenticated();
-
-        if (is_string($_POST['date']) && is_string($_POST['time'])) {
-            $this->StocktakingRepo->create($_POST['date'], $_POST['time'], $_SESSION['userID']);
-            header('Location: /stocktaking/overview');
-        } else {
-            header('Location: /default/error?errorid=2&target=/');
-        }
-    }
-
-    public function doGetStocktakings() {
-        $request = json_decode(file_get_contents('php://input'));
-
-        if (is_string($request->apiKey)) {
-            $user = Authentication::authenticateApiKey($request->apiKey);
-            if ($user != null) {
-                echo json_encode($this->StocktakingRepo->readAll($user->id));
             } else {
-                echo 'forbidden';
+                echo 'no stocktaking';
             }
         } else {
-            echo 'incomplete';
+            echo 'no argument';
         }
     }
 
