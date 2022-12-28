@@ -46,7 +46,7 @@ class SectionController
 
             $view = new View('section/overview');
             $view->title = 'Section Overview';
-            $view->heading = 'Section Overview of Stocktaking';
+            $view->heading = 'Section Overview';
             $view->stocktaking = $this->StocktakingRepo->readByID($_GET['stocktakingId'], $_SESSION['userID']);
             $view->sections = $sections;
             $view->display();
